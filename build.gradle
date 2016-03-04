@@ -46,11 +46,44 @@ allprojects {
   } 
 }
 
+configure(subprojects.findAll {it.name == 'vertx-core' || it.name == 'vertx-platform'}) {
+  apply plugin: 'java'
+  apply plugin: 'maven-publish'
+
+  compileJava {
+    options.compilerArgs << '-profile'
+    options.compilerArgs << 'compact2'
+  }
+
+  publishing {
+    publications {
+      mavenJava(MavenPublication) {
+        from components.java
+
+        artifact sourceJar {
+          classifier "sources"
+        }
+
+        artifact javadocJar {
+          classifier "javadoc"
+        }
+      }
+    }
+
+    repositories {
+      maven {
+        credentials {
+          username 'profile2'
+          password '' // TODO: Add API Key
+        }
+        url "https://api.bintray.com/maven/profile2/maven/vert.x/;publish=1"
+      }
+    }
+  }
+}
+
 subprojects {
   apply plugin: 'java'
-  
-  sourceCompatibility = '1.7'
-  targetCompatibility = '1.7'
 
   defaultTasks = ['classes']
   group = rootProject.group

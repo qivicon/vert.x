@@ -48,9 +48,7 @@ public class JavaVerticleFactory implements VerticleFactory {
     if (isJavaSource(main)) {
       // TODO - is this right???
       // Don't we want one CompilingClassloader per instance of this?
-      CompilingClassLoader compilingLoader = new CompilingClassLoader(cl, main);
-      className = compilingLoader.resolveMainClassName();
-      clazz = compilingLoader.loadClass(className);
+      throw new IllegalStateException("Unable to start a Verticle from a source file.");
     } else {
       clazz = cl.loadClass(className);
     }
